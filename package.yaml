@@ -25,6 +25,7 @@ dependencies:
 - haskell-src-exts
 - directory
 - filepath
+- bytestring
 
 library:
   source-dirs: src

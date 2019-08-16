@@ -16,6 +16,7 @@ import "base"             Data.Maybe
 import "base"             Control.Exception
 import "base"             System.IO.Error
 import                    Easy.Imports.CLI
+import qualified "bytestring" Data.ByteString.Char8 as B
 
 run :: Cmd -> IO ()
 run (Stack fp) = do
@@ -36,9 +37,10 @@ run (Stack fp) = do
 
 
 updatePackageYaml fp packages = do
-    contents <- readFile fp
+    contents <- B.unpack <$> B.readFile fp
     let contents' = modifyPackagesSection packages contents
-    putStrLn contents'
+    --removeIfExists fp
+    print contents'
 
 getImports (Module _ _mMh pragmas importDecls _)
     | hasPackageImports pragmas = mapMaybe importPkg importDecls
