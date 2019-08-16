@@ -3,6 +3,10 @@
 This is a CLI tool for haskell projects whose goal is to simplify imports
 management for haskell files.
 
+warnings:
+- it is suggested to use it in conjunction with git, because it might corrupt files
+
+
 main features:
 1. updates cabal file with all packages imported in the package's modules.
     - remove unused imports
