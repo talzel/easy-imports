@@ -19,26 +19,43 @@ import "base"             System.Exit
 import "process"          System.Process (readProcessWithExitCode)
 
 import                    Easy.Imports.CLI
+import                    Easy.Imports.Cabal
+
 import qualified "bytestring" Data.ByteString.Char8 as B
 
 run :: Cmd -> IO ()
+run (Cabal fp debug) = do
+    isHaskellCabalPackage fp
+    files <- listAllFiles fp
+    let haskellFiles = filter isHaskellModule files
+        mCabalFile = listToMaybe $ filter isCabalFile files
+    cabalFile <- case mCabalFile of
+        Nothing -> return $ error $ "No cabal file in package: " ++ show fp
+        Just f  -> return f
+    packages <- getImportsFromFiles haskellFiles
+    let packages' = removeBaseModule packages
+    updateCabalFile cabalFile packages
+
 run (Stack fp debug updateCabal) = do
-    isHaskellPackage fp
+    isHaskellStackPackage fp
     files <- listAllFiles fp
     let haskellFiles = filter isHaskellModule files
         mPackageYamlFile = listToMaybe $ filter isPackageYaml files
     packageYaml <- case mPackageYamlFile of
         Nothing -> return $ error $ "No stack file in package: " ++ show fp
         Just f  -> return f
-    packages <- fmap (sort . nub . concat ) $ forM haskellFiles $ \hsFile -> do
-        parseFile hsFile >>= \case
-            ParseFailed err2 err -> error $ show [err, show err2]
-            ParseOk m -> return $ getImports m
+    packages <- getImportsFromFiles haskellFiles
     updatePackageYaml packageYaml packages debug
-    -- todo: update cabal from stack automatically
     if (not updateCabal) || debug
         then return ()
         else updateCabalFromStack packageYaml
+
+getImportsFromFiles :: [String] -> IO [String]
+getImportsFromFiles haskellFiles =
+    fmap (sort . nub . concat ) $ forM haskellFiles $ \hsFile ->
+        parseFile hsFile >>= \case
+             ParseFailed err2 err -> error $ show [err, show err2]
+             ParseOk m -> return $ getImports m
 
 updateCabalFromStack :: FilePath -> IO ()
 updateCabalFromStack fp = do
@@ -46,8 +63,8 @@ updateCabalFromStack fp = do
     case exitCode of
         ExitSuccess -> return ()
         ExitFailure errNum -> error $ unlines ["failed updating cabal using stack, exitcode:" ++ show errNum
-                                              ,stderr
-                                              ,stdout
+                                              , stderr
+                                              , stdout
                                               ]
 
 
@@ -94,10 +111,15 @@ isHiddenFolder path =
     let (_, fileName) = splitFileName path
     in isPrefixOf "." fileName
 
-isHaskellPackage :: FilePath -> IO Bool
-isHaskellPackage path = do
+isHaskellStackPackage :: FilePath -> IO Bool
+isHaskellStackPackage path = do
     actualFiles <- listFiles path
     return $ any isPackageYaml actualFiles
+
+isHaskellCabalPackage :: FilePath -> IO Bool
+isHaskellCabalPackage path = do
+    actualFiles <- listFiles path
+    return $ any isCabalFile actualFiles
 
 listFiles :: FilePath -> IO [FilePath]
 listFiles path =

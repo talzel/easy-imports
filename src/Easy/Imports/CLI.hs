@@ -11,6 +11,10 @@ data Cmd = Stack { packageDirectory :: FilePath
                  , debug            :: Bool
                  , updateCabal      :: Bool
                  }
+         | Cabal { packageDirectory :: FilePath
+                 , debug            :: Bool
+                 }
+
     deriving (Generic, Show)
 
 instance ParseRecord Cmd

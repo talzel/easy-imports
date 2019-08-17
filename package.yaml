@@ -27,6 +27,8 @@ dependencies:
 - filepath
 - bytestring
 - process
+- Cabal >= 3.0
+- containers
 
 library:
   source-dirs: src

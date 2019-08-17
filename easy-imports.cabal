@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: dc1c4543d11c6f9a400f65252bf736088383f20f05e0e0112f1584146f09fba0
+-- hash: 4bc5c32b17bf7ff8a969d18d2b5ea88aaf877c8a165ace97330e4d58ae994078
 
 name:           easy-imports
 version:        0.1.0.0
@@ -28,14 +28,17 @@ source-repository head
 library
   exposed-modules:
       Easy.Imports
+      Easy.Imports.Cabal
       Easy.Imports.CLI
   other-modules:
       Paths_easy_imports
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      Cabal >=3.0
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , directory
     , filepath
     , haskell-src-exts
@@ -51,8 +54,10 @@ executable easy-imports
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      Cabal >=3.0
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , directory
     , easy-imports
     , filepath
@@ -70,8 +75,10 @@ test-suite easy-imports-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      Cabal >=3.0
+    , base >=4.7 && <5
     , bytestring
+    , containers
     , directory
     , easy-imports
     , filepath

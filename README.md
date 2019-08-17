@@ -12,7 +12,7 @@ warnings:
 ``` bash
 $ git checkout https://github.com/talzel/easy-imports.git
 $ cd easy-imports
-$ stack install -fast 
+$ stack install --fast 
 ```
 
 ## Usage
