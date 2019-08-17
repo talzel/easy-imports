@@ -15,11 +15,14 @@ import "filepath"         System.FilePath
 import "base"             Data.Maybe
 import "base"             Control.Exception
 import "base"             System.IO.Error
+import "base"             System.Exit
+import "process"          System.Process (readProcessWithExitCode)
+
 import                    Easy.Imports.CLI
 import qualified "bytestring" Data.ByteString.Char8 as B
 
 run :: Cmd -> IO ()
-run (Stack fp debug) = do
+run (Stack fp debug updateCabal) = do
     isHaskellPackage fp
     files <- listAllFiles fp
     let haskellFiles = filter isHaskellModule files
@@ -33,6 +36,20 @@ run (Stack fp debug) = do
             ParseOk m -> return $ getImports m
     updatePackageYaml packageYaml packages debug
     -- todo: update cabal from stack automatically
+    if (not updateCabal) || debug
+        then return ()
+        else updateCabalFromStack packageYaml
+
+updateCabalFromStack :: FilePath -> IO ()
+updateCabalFromStack fp = do
+    (exitCode,stdout,stderr) <- readProcessWithExitCode "stack" ["build"] ""
+    case exitCode of
+        ExitSuccess -> return ()
+        ExitFailure errNum -> error $ unlines ["failed updating cabal using stack, exitcode:" ++ show errNum
+                                              ,stderr
+                                              ,stdout
+                                              ]
+
 
 
 updatePackageYaml :: FilePath -> [String] -> Bool -> IO ()

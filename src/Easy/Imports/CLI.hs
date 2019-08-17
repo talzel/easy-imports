@@ -9,6 +9,7 @@ import "optparse-generic" Options.Generic
 
 data Cmd = Stack { packageDirectory :: FilePath
                  , debug            :: Bool
+                 , updateCabal      :: Bool
                  }
     deriving (Generic, Show)
 

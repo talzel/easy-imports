@@ -55,16 +55,19 @@ warning: currently oprerates on `package.yaml` only. `stack` is needed to be run
 
 
 ## Roadmap
-- update cabal file from `easy-imports` automatically
-- add flag for full directories
+- ~~update cabal file from `easy-imports` automatically~~ (added a flag, because of the speed using stack)
+- proper help flag information
+- change examples to run on test files and not on the actual folder
+- add flag for directories with multiple packages
 - add warnings to unused imports in easy-imports output
 - literate haskell support
-- direct cabal support
+- direct cabal support (eliminates the need for cabal update flag)
 - nix installation
-- cabal installtion
+- cabal installation
+- add test to run
 - modify import statements to their PackageImports extension form by a fixed dict
 - allow the option to override dict from external source
 - update module with top level function names
 - TBD: qualify an import in a module and qualify all items from that import
 - TBD: solve clashing names (list vs set) via automated qualification
- 
+- TBD: help with compiler related warnings
