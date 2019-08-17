@@ -7,7 +7,9 @@ module Easy.Imports.CLI where
 import "optparse-generic" Options.Generic
 
 
-data Cmd = Stack { packageDirectory :: FilePath}
+data Cmd = Stack { packageDirectory :: FilePath
+                 , debug            :: Bool
+                 }
     deriving (Generic, Show)
 
 instance ParseRecord Cmd

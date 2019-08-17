@@ -19,7 +19,7 @@ import                    Easy.Imports.CLI
 import qualified "bytestring" Data.ByteString.Char8 as B
 
 run :: Cmd -> IO ()
-run (Stack fp) = do
+run (Stack fp debug) = do
     isHaskellPackage fp
     files <- listAllFiles fp
     let haskellFiles = filter isHaskellModule files
@@ -31,17 +31,23 @@ run (Stack fp) = do
         parseFile hsFile >>= \case
             ParseFailed err2 err -> error $ show [err, show err2]
             ParseOk m -> return $ getImports m
-    let packages' = removeBaseModule packages
-    updatePackageYaml packageYaml packages'
+    updatePackageYaml packageYaml packages debug
     -- todo: update cabal from stack automatically
 
 
-updatePackageYaml fp packages = do
+updatePackageYaml :: FilePath -> [String] -> Bool -> IO ()
+updatePackageYaml fp packages debug = do
     contents <- B.unpack <$> B.readFile fp
-    let contents' = modifyPackagesSection packages contents
-    --removeIfExists fp
-    --print contents'
-    B.writeFile fp $ B.pack contents'
+    let packages' = removeBaseModule packages
+    let contents' = modifyPackagesSection packages' contents
+    if debug
+    then do
+      B.putStrLn "------------------------------------ Original file ------------------------------------"
+      putStrLn contents
+      B.putStrLn "------------------------------------ Modified file ------------------------------------"
+      putStrLn contents'
+    else
+      B.writeFile fp $ B.pack contents'
 
 getImports (Module _ _mMh pragmas importDecls _)
     | hasPackageImports pragmas = mapMaybe importPkg importDecls
