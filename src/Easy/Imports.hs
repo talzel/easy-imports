@@ -40,7 +40,8 @@ updatePackageYaml fp packages = do
     contents <- B.unpack <$> B.readFile fp
     let contents' = modifyPackagesSection packages contents
     --removeIfExists fp
-    print contents'
+    --print contents'
+    B.writeFile fp $ B.pack contents'
 
 getImports (Module _ _mMh pragmas importDecls _)
     | hasPackageImports pragmas = mapMaybe importPkg importDecls
@@ -103,11 +104,12 @@ listAllFiles dirpath = do
 
 modifyPackagesSection :: [String] -> String -> String
 modifyPackagesSection packages fileContent =
-    let unyamlListElem = drop 2
+    let deMicrosoftifyString = filter (/= '\r')
+        unyamlListElem = deMicrosoftifyString . drop 2
         yamlListElem = (++) "- "
         fileLines = lines fileContent
         dependencieslist = map unyamlListElem $ getDependenciesBlock fileLines
-        newDependenciesList = sort $ packages `union` dependencieslist
+        newDependenciesList = sort $ packages `union` dependencieslist -- TODO: insert unused warrning in output and as comment in the package.yaml
         newDependenciesList' = map yamlListElem newDependenciesList
         fileHead = reverse $ dropWhile (not . isDependenciesHdr) $ reverse fileLines
         fileTail = dropWhile isYamlListElem $ tail $ dropWhile (not . isDependenciesHdr) fileLines
