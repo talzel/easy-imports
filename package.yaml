@@ -29,6 +29,7 @@ dependencies:
 - process
 - Cabal >= 3.0
 - containers
+- pretty-simple
 
 library:
   source-dirs: src

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4bc5c32b17bf7ff8a969d18d2b5ea88aaf877c8a165ace97330e4d58ae994078
+-- hash: e43d3f7ac827f3cb7d2aa1be097a610fca98296eb31219069c99ede55f4f1234
 
 name:           easy-imports
 version:        0.1.0.0
@@ -43,6 +43,7 @@ library
     , filepath
     , haskell-src-exts
     , optparse-generic
+    , pretty-simple
     , process
   default-language: Haskell2010
 
@@ -63,6 +64,7 @@ executable easy-imports
     , filepath
     , haskell-src-exts
     , optparse-generic
+    , pretty-simple
     , process
   default-language: Haskell2010
 
@@ -84,5 +86,6 @@ test-suite easy-imports-test
     , filepath
     , haskell-src-exts
     , optparse-generic
+    , pretty-simple
     , process
   default-language: Haskell2010
