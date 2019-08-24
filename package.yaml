@@ -27,9 +27,10 @@ dependencies:
 - filepath
 - bytestring
 - process
-- Cabal >= 3.0
+- Cabal
 - containers
 - pretty-simple
+- lens
 
 library:
   source-dirs: src
