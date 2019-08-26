@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.31.0.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 84608c8aea72e7b57880fa8f840c27d5f7b6441d08f987b77deae2a272461607
+-- hash: 1332816d3ff0d2a704f9dda0171229de3810f2134f34b502e14f8bedf36b7b7c
 
 name:           easy-imports
 version:        0.1.0.0
@@ -30,6 +30,7 @@ library
       Easy.Imports
       Easy.Imports.Cabal
       Easy.Imports.CLI
+      Easy.Imports.TH
   other-modules:
       Paths_easy_imports
   hs-source-dirs:
